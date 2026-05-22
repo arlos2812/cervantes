@@ -1,0 +1,1656 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miguel de Cervantes - Plataforma Educativa con Exámenes Dinámicos de IA</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: {
+              50: '#fdf2f4',
+              100: '#fbe5e9',
+              200: '#f7ccd5',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+            parchment: {
+              50: '#fcfbf7',
+              100: '#f6f3ea',
+              200: '#e8e1cf',
+              900: '#3e3423',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+    
+    .font-serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .font-serif-body {
+      font-family: 'Playfair Display', serif;
+    }
+    .font-sans-ui {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    /* Personalización de scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f6f3ea;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c2b49a;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9d8e74;
+    }
+
+    /* Resaltador de búsqueda */
+    mark {
+      background-color: rgba(245, 158, 11, 0.3);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+  </style>
+</head>
+<body class="bg-parchment-100 text-parchment-900 font-sans-ui min-h-screen flex flex-col selection:bg-burgundy-200 selection:text-burgundy-900">
+
+  <!-- Encabezado Heroico -->
+  <header class="relative bg-gradient-to-b from-burgundy-900 to-burgundy-800 text-white overflow-hidden py-12 px-4 border-b-4 border-amber-600 shadow-xl">
+    <div class="absolute inset-0 opacity-10 bg-cover bg-center mix-blend-overlay pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=1200');"></div>
+    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-20"></div>
+    <div class="absolute -left-16 -top-16 w-64 h-64 bg-red-800 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <div class="inline-block px-3 py-1 bg-amber-600/30 text-amber-300 rounded-full text-xs font-semibold tracking-wider uppercase mb-3 border border-amber-500/30">
+        <i class="fa-solid fa-feather-pointed mr-1"></i> Literatura Española: El Siglo de Oro
+      </div>
+      <h1 class="font-serif-title text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide mb-3 drop-shadow-md">
+        Cervantes Digital
+      </h1>
+      <p class="font-serif-body text-lg md:text-xl text-amber-100 italic max-w-2xl mx-auto leading-relaxed">
+        Plataforma Inteligente con Generador de Exámenes de IA y Aula de YouTube
+      </p>
+      
+      <!-- Buscador Avanzado en el Contenido Original de la Web -->
+      <div class="mt-8 max-w-xl mx-auto relative px-4">
+        <div class="absolute inset-y-0 left-7 flex items-center pointer-events-none text-amber-200">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <input type="text" id="searchInput" oninput="searchContent()" placeholder="Buscar conceptos en el texto de estudio (ej. metaficción, idealistas, Sancho)..." class="w-full pl-10 pr-12 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-amber-200/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white/20 transition-all text-sm shadow-inner">
+        <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute inset-y-0 right-7 flex items-center text-amber-200 hover:text-white">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación por Secciones Principales -->
+  <nav class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-parchment-200 shadow-md">
+    <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar scroll-smooth">
+      <button onclick="switchTab('tab-quijote')" id="btn-tab-quijote" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-burgundy-700 text-burgundy-800 font-bold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-book-open"></i> 1. Don Quijote
+      </button>
+      <button onclick="switchTab('tab-narrativas')" id="btn-tab-narrativas" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-gray-500 hover:text-burgundy-800 font-semibold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 2. Técnicas y Estilo
+      </button>
+      <button onclick="switchTab('tab-prosa')" id="btn-tab-prosa" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-gray-500 hover:text-burgundy-800 font-semibold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-scroll"></i> 3. Novelas Idealistas
+      </button>
+      <button onclick="switchTab('tab-ejemplares')" id="btn-tab-ejemplares" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-gray-500 hover:text-burgundy-800 font-semibold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-award"></i> 4. Novelas Ejemplares
+      </button>
+      <button onclick="switchTab('tab-multimedia')" id="btn-tab-multimedia" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-red-600 hover:text-red-800 font-bold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-brands fa-youtube animate-pulse"></i> 5. Aula YouTube API
+      </button>
+      <button onclick="switchTab('tab-trivia')" id="btn-tab-trivia" class="nav-btn flex-shrink-0 px-6 py-4 border-b-2 border-transparent text-amber-600 hover:text-amber-800 font-bold text-sm md:text-base flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-graduation-cap"></i> 6. Examen de IA <span class="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1 font-sans-ui animate-pulse">LIVE</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Área Principal de Contenido -->
+  <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-8">
+
+    <!-- Notificación del Buscador original -->
+    <div id="searchNotification" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-magnifying-glass text-amber-600"></i>
+        <span>Coincidencias encontradas en los apuntes: <strong id="matchCount">0</strong>.</span>
+      </div>
+      <button onclick="clearSearchInput()" class="text-xs font-bold underline text-burgundy-800 hover:text-burgundy-900 self-start sm:self-center">Mostrar todo el contenido original</button>
+    </div>
+
+    <!-- ================= SECCIÓN 1: DON QUIJOTE DE LA MANCHA ================= -->
+    <section id="tab-quijote" class="tab-content space-y-8">
+      
+      <!-- Ficha de la Obra -->
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-2 h-full bg-burgundy-700"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          <div class="lg:col-span-2 space-y-4">
+            <h2 class="font-serif-title text-2xl md:text-3xl font-bold text-burgundy-900 flex items-center gap-3">
+              <span class="text-amber-600">4.</span> El Quijote de la Mancha
+            </h2>
+            <p class="search-text text-gray-700 leading-relaxed text-justify">
+              La obra más importante de Miguel de Cervantes es Don Quijote de la Mancha. La novela fue un éxito rotundo desde su publicación y ha ejercido una influencia descomunal en la literatura universal, equiparable a gigantes como William Shakespeare. Es, tras la Biblia, el libro más traducido y editado de la historia de la humanidad.
+            </p>
+            
+            <!-- Génesis -->
+            <div class="bg-parchment-50 p-5 rounded-xl border border-parchment-200 space-y-2 mt-4">
+              <h3 class="text-burgundy-800 font-bold text-lg flex items-center gap-2">
+                <i class="fa-solid fa-dna text-sm"></i> Génesis de la Obra
+              </h3>
+              <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+                A comienzos del siglo XVII, las novelas de caballerías gozaban de una aceptación extraordinaria: lectores de todas las clases sociales se entusiasmaban con las hazañas de caballeros andantes que luchaban por la justicia y servían a una dama idealizada. 
+                Cervantes quiso, en un principio, escribir una parodia de este tipo de libros disparatados y ajenos a la sociedad en la que se leían. No obstante, en su proceso de creación, el relato acabó superando por mucho esta idea inicial.
+              </p>
+            </div>
+          </div>
+          <!-- Ilustración Conceptual -->
+          <div class="flex flex-col items-center justify-center bg-parchment-50 p-6 rounded-2xl border border-dashed border-parchment-200 relative">
+            <div class="text-center space-y-4">
+              <span class="text-6xl text-amber-700 block">⚜️</span>
+              <p class="font-serif-body italic text-gray-600 text-sm">"En un lugar de la Mancha, de cuyo nombre no quiero acordarme..."</p>
+              <div class="text-left bg-white p-3 rounded-lg border border-parchment-200/60 shadow-sm text-xs space-y-1">
+                <span class="font-bold text-burgundy-900 block"><i class="fa-solid fa-scroll mr-1"></i> Hito Literario</span>
+                <p class="text-gray-600 search-text">Considerada la primera novela moderna de la historia por sus múltiples planos de realidad.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- El Argumento en las Dos Partes -->
+      <div class="searchable-item space-y-4">
+        <h3 class="font-serif-title text-xl font-bold text-burgundy-900 flex items-center gap-2">
+          <i class="fa-solid fa-arrows-split-up-and-left text-amber-600"></i> Argumento y Estructura en Dos Partes
+        </h3>
+        <p class="text-sm text-gray-600">El Quijote apareció publicado en dos tomos bien diferenciados en el tiempo. Pulsa en cada parte para conocer sus detalles:</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Primera Parte -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full border border-amber-200">Publicada en 1605</span>
+                <span class="text-burgundy-700 font-serif-title font-bold text-lg">Parte I</span>
+              </div>
+              <h4 class="font-bold text-lg text-burgundy-900 mb-3 flex items-center gap-2">
+                La locura andante y las dos salidas
+              </h4>
+              <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+                Alonso Quijano decide convertirse en caballero andante con el nombre de Don Quijote. Elige una dama imaginaria para dedicarle sus hazañas, Dulcinea (quien en la realidad es una campesina sencilla llamada Aldonza Lorenzo), y monta sobre su flaco caballo, Rocinante, para salir a buscar aventuras.
+              </p>
+              <p class="search-text text-sm text-gray-700 leading-relaxed text-justify mt-3">
+                A lo largo de dos salidas (la primera la hace en solitario y la segunda ya acompañado por su escudero y vecino, Sancho Panza), el protagonista confunde constantemente la realidad real con su desbordada fantasía caballeresca. Por ejemplo, ve castillos feudales donde solo hay posadas vulgares, o temibles gigantes donde en verdad hay molinos de viento. 
+              </p>
+            </div>
+            <div class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-xs text-amber-900 mt-4 italic search-text">
+              <strong>Desenlace de la primera parte:</strong> Al final, Don Quijote regresa a su casa, obligado y escoltado por Sancho Panza y por otros vecinos preocupados.
+            </div>
+          </div>
+
+          <!-- Segunda Parte -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 bg-burgundy-100 text-burgundy-800 text-xs font-bold rounded-full border border-burgundy-200">Publicada en 1615</span>
+                <span class="text-burgundy-700 font-serif-title font-bold text-lg">Parte II</span>
+              </div>
+              <h4 class="font-bold text-lg text-burgundy-900 mb-3 flex items-center gap-2">
+                La tercera salida y el choque con el desengaño
+              </h4>
+              <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+                Recoge las peripecias de la tercera salida que realizan de mutuo acuerdo Don Quijote y Sancho. El tono cambia ostensiblemente: el caballero ahora se muestra más realista, ya no confunde los entornos ni las posadas por sí mismo. In cambio, son los demás personajes quienes le engañan deliberadamente para divertirse a su costa (como ocurre con los duques).
+              </p>
+              <p class="search-text text-sm text-gray-700 leading-relaxed text-justify mt-3">
+                Hacia el final, los protagonistas llegan a Barcelona. Allí, en la playa, Don Quijote es retado y derrotado por el Caballero de la Blanca Luna, que en realidad es un vecino suyo de su pueblo, disfrazado con astucia para forzarlo a regresar a su hogar y curarse.
+              </p>
+            </div>
+            <div class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-xs text-amber-900 mt-4 italic search-text">
+              <strong>Desenlace final:</strong> Una vez en su aldea, Don Quijote cae muy enfermo. Tras renegar por completo de sus locuras de caballería y recobrar el juicio, muere rodeado de los suyos.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Los Personajes Principales -->
+      <div class="searchable-item space-y-6">
+        <div class="text-center max-w-xl mx-auto">
+          <h3 class="font-serif-title text-2xl font-bold text-burgundy-900">La dualidad de los Personajes</h3>
+          <p class="text-sm text-gray-600 mt-2 search-text">La gran cantidad de personajes del Quijote refleja la inmensa diversidad social del siglo XVII (venteros, galeotes, cortesanas, clérigos...). No obstante, la obra brilla especialmente por la construcción de sus dos protagonistas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Tarjeta de Don Quijote -->
+          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-amber-600 relative">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-xl font-bold">DQ</div>
+              <div>
+                <h4 class="font-bold text-xl text-burgundy-900">Don Quijote</h4>
+                <p class="text-xs text-gray-500 font-serif-body italic">El hidalgo de triste figura</p>
+              </div>
+            </div>
+            <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+              Representa el tópico del loco cuerdo: un hombre que está loco para la ficción de la caballería, pero que posee una lucidez y sabiduría mental sorprendentes para cualquier otro tema humano.
+            </p>
+            <div class="mt-4 p-3 bg-parchment-50 rounded-xl border border-parchment-200 text-xs space-y-1 text-gray-600">
+              <span class="font-bold text-burgundy-800"><i class="fa-solid fa-chart-line mr-1"></i> Evolución Psicológica:</span>
+              <p class="search-text">A lo largo de la obra, el hidalgo va recuperando la cordura y evoluciona psicológicamente por la influencia directa de Sancho Panza, al mismo tiempo que experimenta el amargo desengaño del mundo real.</p>
+            </div>
+          </div>
+
+          <!-- Tarjeta de Sancho Panza -->
+          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-burgundy-700 relative">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-full bg-burgundy-100 flex items-center justify-center text-burgundy-700 text-xl font-bold">SP</div>
+              <div>
+                <h4 class="font-bold text-xl text-burgundy-900">Sancho Panza</h4>
+                <p class="text-xs text-gray-500 font-serif-body italic">El escudero fiel y pragmático</p>
+              </div>
+            </div>
+            <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+              Es descrito originalmente como un campesino simplón, pero destaca por ser honrado, bondadoso y sumamente fiel a su señor. Acepta acompañarle tentado por la promesa de gobernar una ínsula propia.
+            </p>
+            <div class="mt-4 p-3 bg-parchment-50 rounded-xl border border-parchment-200 text-xs space-y-1 text-gray-600">
+              <span class="font-bold text-burgundy-800"><i class="fa-solid fa-chart-line mr-1"></i> Evolución Psicológica:</span>
+              <p class="search-text">Tiene una filosofía de vida práctica y terrenal que contrasta vivamente con las fantasías de su amo. Sus vivencias junto a Don Quijote le harán asimilar la locura poética de este, naciendo así una profunda e indestructible amistad.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Concepto clave: Quijotización y Sanchificación -->
+        <div class="bg-gradient-to-r from-amber-50 to-burgundy-50 p-6 rounded-2xl border border-amber-200/50">
+          <h4 class="font-serif-title text-lg font-bold text-burgundy-900 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-arrows-left-right text-amber-600"></i> Simbiosis Psicológica de los Protagonistas
+          </h4>
+          <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+            A este doble proceso de influencia se le conoce en la crítica literaria como quijotización de Sancho (quien acaba amando el ideal caballeresco y adoptando el habla culta de su señor) y sanchificación de Don Quijote (quien poco a poco va asumiendo el sentido práctico, realista y desengañado de Sancho).
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 2: TÉCNICAS NARRATIVAS Y ESTILO ================= -->
+    <section id="tab-narrativas" class="tab-content hidden space-y-8">
+      
+      <!-- Tabla / Tarjetas de Técnicas Narrativas -->
+      <div class="searchable-item space-y-6">
+        <div class="border-b border-parchment-200 pb-4">
+          <h2 class="font-serif-title text-2xl font-bold text-burgundy-900">Técnicas Narrativas en El Quijote</h2>
+          <p class="text-sm text-gray-600 mt-1">Cervantes anticipó de forma revolucionaria las técnicas que usaría la novela europea posterior.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Polifonía Narrativa -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-burgundy-100 flex items-center justify-center text-burgundy-700">
+                <i class="fa-solid fa-people-group"></i>
+              </div>
+              <h3 class="font-bold text-lg text-burgundy-900">Polifonía Narrativa</h3>
+              <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Múltiples Voces</p>
+              <p class="search-text text-sm text-gray-700 text-justify leading-relaxed">
+                La novela presenta diversas voces narrativas: el narrador inicial afirma haber encontrado la historia en un manuscrito de un historiador arábigo (Cide Hamete Benengeli) y a esto le añade información recopilada en otras fuentes ficticias.
+              </p>
+            </div>
+            
+            <div class="mt-4 p-3 bg-parchment-50 rounded-lg border border-parchment-200/60 text-xs">
+              <span class="font-bold text-burgundy-900 block mb-1">Evidencia Textual:</span>
+              <p class="search-text italic text-gray-600">"Estando yo un día en Alcaná de Toledo, llegó un muchacho a vender unos cartapacios [...] y como yo soy aficionado a leer aunque sean los papeles rotos de las calles, [...] tomé un cartapacio de los que el muchacho vendía y vile con caracteres que conocí ser arábigos."</p>
+              <button onclick="readText(this)" class="mt-2 text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> Escuchar Cita
+              </button>
+            </div>
+          </div>
+
+          <!-- Digresiones -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700">
+                <i class="fa-solid fa-code-branch"></i>
+              </div>
+              <h3 class="font-bold text-lg text-burgundy-900">Digresiones</h3>
+              <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Historias Intercaladas</p>
+              <p class="search-text text-sm text-gray-700 text-justify leading-relaxed">
+                La acción principal es interrumpida constantemente por relatos ajenos a la trama que Cervantes intercala en el texto, tales como la novela corta de El curioso impertinente o la Historia de Cardenio.
+              </p>
+            </div>
+            
+            <div class="mt-4 p-3 bg-parchment-50 rounded-lg border border-parchment-200/60 text-xs">
+              <span class="font-bold text-burgundy-900 block mb-1">Evidencia Textual:</span>
+              <p class="search-text italic text-gray-600">"El Roto, después de haberse acomodado en su asiento, dijo: -Si gustáis, señores, que os diga en breves razones la inmensidad de mis desventuras, habéis de prometerme de que con ninguna pregunta ni otra cosa no interrumpiréis el hilo de mi triste historia."</p>
+              <button onclick="readText(this)" class="mt-2 text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> Escuchar Cita
+              </button>
+            </div>
+          </div>
+
+          <!-- Metaficción -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-800">
+                <i class="fa-solid fa-arrows-to-eye"></i>
+              </div>
+              <h3 class="font-bold text-lg text-burgundy-900">Metaficción</h3>
+              <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Ficción dentro de la Ficción</p>
+              <p class="search-text text-sm text-gray-700 text-justify leading-relaxed">
+                Consiste en reflexionar sobre la ficción dentro de la propia obra. En la segunda parte, los protagonistas son perfectamente conscientes de que se ha publicado la primera parte de sus aventuras y que el público ya ha leído sus historias.
+              </p>
+            </div>
+            
+            <div class="mt-4 p-3 bg-parchment-50 rounded-lg border border-parchment-200/60 text-xs">
+              <span class="font-bold text-burgundy-900 block mb-1">Evidencia Textual:</span>
+              <p class="search-text italic text-gray-600">"Me dijo que andaba ya en libros la historia de vuestra merced, con nombre del Ingenioso Hidalgo don Quijote de la Mancha; y dice que me mientan a mí en ella con mi mesmo nombre de Sancho Panza, y a la señora Dulcinea del Toboso..."</p>
+              <button onclick="readText(this)" class="mt-2 text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> Escuchar Cita
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- El Estilo Literario -->
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200">
+        <h3 class="font-serif-title text-xl font-bold text-burgundy-900 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-feather text-amber-600"></i> El Estilo
+        </h3>
+        <p class="search-text text-sm text-gray-700 leading-relaxed text-justify mb-4">
+          Miguel de Cervantes emplea en el Quijote un estilo sencillo, basado en un uso natural del lenguaje e inspirado en los principios renacentistas de equilibrio y claridad. El autor domina con maestría diversas formas literarias y varios registros lingüísticos. El lenguaje se adapta con genialidad a cada personaje y situación, a la vez que contribuye a parodiar las novelas de caballerías con el uso del estilo altisonante característico de estas obras.
+        </p>
+      </div>
+
+      <!-- Interpretación y Temas de la Obra -->
+      <div class="searchable-item grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Interpretación teórica -->
+        <div class="lg:col-span-1 bg-burgundy-900 text-white p-6 rounded-2xl flex flex-col justify-between">
+          <div class="space-y-4">
+            <span class="text-xs uppercase tracking-wider font-bold text-amber-400">Prólogo de la obra</span>
+            <h3 class="font-serif-title text-xl font-bold">Interpretación de la Obra</h3>
+            <p class="search-text text-sm text-amber-100/90 leading-relaxed text-justify">
+              En el prólogo del Quijote, Cervantes manifiesta la intención explícita de parodiar el género de las novelas de caballerías para mostrar su influencia perniciosa. 
+            </p>
+            <p class="search-text text-sm text-amber-100/90 leading-relaxed text-justify">
+              Sin embargo, el significado final de la obra va mucho más allá de la mera parodia jocosa, pues aborda con una perspectiva realista temas profundos de la existencia y la naturaleza humana.
+            </p>
+          </div>
+          <div class="border-t border-white/20 pt-4 mt-4 text-xs text-amber-200 search-text">
+            Cervantes nos invita a reflexionar sobre el choque ineludible entre el sueño idealizado y la dura realidad.
+          </div>
+        </div>
+
+        <!-- Lista de Temas clave (Universalidad) -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-parchment-200 space-y-4">
+          <h3 class="font-serif-title text-lg font-bold text-burgundy-900 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-amber-600"></i> Temas Universales Subyacentes
+          </h3>
+          <p class="text-xs text-gray-500">Estos temas dotan al Quijote de un carácter universal por los valores imperecederos que transmite:</p>
+          
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>El contraste entre ficción y realidad:</strong> Dos planos distintos pero complementarios en constante conflicto.
+              </div>
+            </li>
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>La búsqueda de la libertad:</strong> Entendida como el motor principal de la conducta de los seres humanos.
+              </div>
+            </li>
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>La necesidad de la imaginación:</strong> El papel del sueño y la fantasía para sobrevivir a la dureza del día a día.
+              </div>
+            </li>
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>La frustración de los deseos:</strong> El choque ante la imposibilidad de que las cosas ocurran tal y como deseamos.
+              </div>
+            </li>
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>Límites entre locura y cordura:</strong> La delgada línea que separa la genialidad lunática del juicio razonable.
+              </div>
+            </li>
+            <li class="flex items-start gap-2 p-3 bg-parchment-50 rounded-lg hover:bg-parchment-100 transition-colors">
+              <span class="text-amber-600 font-bold">✓</span>
+              <div class="search-text">
+                <strong>La amistad pura:</strong> Cimentada en la complicidad y el afecto de Don Quijote y Sancho Panza.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Texto Destacado: La quijotización de Sancho en el lecho de muerte -->
+      <div class="searchable-item bg-amber-50/70 p-6 rounded-2xl border border-amber-200">
+        <h4 class="font-serif-title text-base font-bold text-burgundy-900 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-quote-left text-amber-600"></i> Testimonio Literario: El lecho de muerte
+        </h4>
+        <p class="text-xs text-gray-500 mb-3">En el capítulo final, se observa la emotiva "quijotización de Sancho", quien suplica a un Don Quijote moribundo y ya cuerdo que no se rinda y sigan viviendo su fantasía:</p>
+        <blockquote class="search-text font-serif-body italic text-gray-700 bg-white p-4 rounded-lg border-l-4 border-amber-600 text-sm leading-relaxed text-justify">
+          "No se muera vuesa merced, señor mío, sino tome mi consejo, y viva muchos años; porque la mayor locura que puede hacer un hombre en esta vida es dejarse morir, sin más ni más, sin que nadie le mate, ni otras manos le acaben que las de la melancolía. Mire no sea perezoso, sino levántese de esa cama, y vámonos al campo vestidos de pastores, como tenemos concertado; quizá tras de alguna mata hallaremos a la señora doña Dulcinea desencantada, que no haya más que ver. Si es que se muere de pesar de verse vencido, écheme a mí la culpa, diciendo que por haber yo cinchado mal a Rocinante le derribaron."
+        </blockquote>
+        <div class="mt-3 flex justify-end">
+          <button onclick="readText(this)" class="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 bg-white px-3 py-1.5 rounded-full shadow-sm border border-amber-200">
+            <i class="fa-solid fa-volume-high"></i> Escuchar Fragmento Literario completo
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 3: OBRA EN PROSA - NOVELAS IDEALISTAS ================= -->
+    <section id="tab-prosa" class="tab-content hidden space-y-8">
+      
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200">
+        <div class="border-b border-parchment-200 pb-4 mb-6">
+          <h2 class="font-serif-title text-2xl font-bold text-burgundy-900">3. Obra en Prosa de Cervantes</h2>
+          <p class="text-sm text-gray-600 mt-1">Más allá del Quijote, Cervantes cultivó con excelencia las formas narrativas en voga durante el Renacimiento.</p>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-burgundy-800 font-bold text-lg flex items-center gap-2">
+            <i class="fa-solid fa-shield text-amber-600"></i> Novelas Idealistas
+          </h3>
+          <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+            Los géneros narrativos de carácter idealista propios del Renacimiento gozaban todavía de gran éxito en la época de Cervantes: entre ellos, destacaban la novela pastoril, la de caballerías o la bizantina. El autor aportó a esta corriente dos obras de altísimo valor:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            
+            <!-- La Galatea -->
+            <div class="bg-parchment-50 p-6 rounded-xl border border-parchment-200 flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-amber-700 uppercase tracking-widest block mb-1">Novela Pastoril</span>
+                <h4 class="font-serif-body font-bold text-xl text-burgundy-900 mb-2 italic">La Galatea</h4>
+                <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+                  Se trata de una novela pastoril que narra el amor no correspondido de unos pastores por la hermosísima ninfa Galatea. El diseño y la trama de la obra permitieron a Cervantes intercalar poemas líricos de exquisita factura y novelas cortas de temática variada para amenizar y entretener a sus lectores.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-parchment-200/60 text-xs text-gray-500 italic">
+                Aporte lírico intercalado en la tradición pastoril.
+              </div>
+            </div>
+
+            <!-- Los trabajos de Persiles y Sigismunda -->
+            <div class="bg-parchment-50 p-6 rounded-xl border border-parchment-200 flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-amber-700 uppercase tracking-widest block mb-1">Novela Bizantina</span>
+                <h4 class="font-serif-body font-bold text-xl text-burgundy-900 mb-2 italic">Los trabajos de Persiles y Sigismunda</h4>
+                <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+                  Es una novela bizantina que relata el largo y accidentado peregrinaje de los príncipes de Tule y Islandia (bajo las identidades de Periandro y Auristela) hacia la ciudad santa de Roma. Se publicó póstumamente y contiene una famosa y conmovedora dedicatoria donde el autor parece despedirse con serenidad de la vida.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-parchment-200/60 text-xs text-gray-500 italic">
+                Publicación póstuma y testamento literario.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- La Dedicatoria del Persiles -->
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200">
+        <h4 class="font-serif-title text-base font-bold text-burgundy-900 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-feather-pointed text-amber-600"></i> Despedida de Cervantes: Prólogo del Persiles
+        </h4>
+        <p class="text-xs text-gray-500 mb-4">Escrito días antes de fallecer, este poema de dedicatoria es una de las joyas de la emotividad del Siglo de Oro:</p>
+        
+        <div class="flex flex-col md:flex-row gap-6 items-center">
+          <div class="flex-grow bg-parchment-50 p-6 rounded-xl border border-dashed border-parchment-200">
+            <pre class="search-text font-serif-body italic text-gray-800 text-center text-base leading-relaxed whitespace-pre-line py-2">
+              "Puesto ya el pie en el estribo,
+              con las ansias de la muerte,
+              gran señor, esta te escribo."
+            </pre>
+          </div>
+          <div class="md:w-1/3 text-left space-y-2">
+            <h5 class="text-xs font-bold text-burgundy-900 uppercase">Contexto Crítico</h5>
+            <p class="search-text text-xs text-gray-600 leading-relaxed">
+              Muestra la total serenidad y elegancia de Cervantes de cara a su muerte. Los versos son una reescritura de un romance clásico español adaptado a su situación personal.
+            </p>
+            <button onclick="readText(this)" class="mt-2 text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> Escuchar estos versos
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 4: LAS NOVELAS EJEMPLARES ================= -->
+    <section id="tab-ejemplares" class="tab-content hidden space-y-8">
+      
+      <!-- Introducción general -->
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200">
+        <div class="border-b border-parchment-200 pb-4 mb-6">
+          <h2 class="font-serif-title text-2xl font-bold text-burgundy-900">Las Novelas Ejemplares</h2>
+          <p class="text-sm text-gray-600 mt-1">El hito del relato corto en la literatura del Siglo de Oro, publicado por Cervantes en 1613.</p>
+        </div>
+
+        <div class="space-y-4">
+          <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+            En 1613, Cervantes publicó un conjunto de doce novelas escritas al estilo de la novella italiana, un tipo de relato corto y ágil que no gozaba de gran tradición seria en España. Cervantes las bautizó con el adjetivo de «ejemplares» con la intención declarada de que sirvieran de ejemplo o provecho constructivo para el lector.
+          </p>
+          
+          <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-amber-900 italic">
+            <strong>Doble sentido del adjetivo «ejemplar»:</strong>
+            <p class="search-text mt-1 font-sans-ui text-xs text-gray-700 not-italic">
+              Por un lado, poseían el sentido didáctico tradicional. Por el otro, servían de "ejemplo" literario en el sentido de que eran radicalmente novedosas en el panorama literario español, ofreciendo un modelo imitable de narrativa para futuros escritores.
+            </p>
+          </div>
+
+          <p class="search-text text-sm text-gray-700 leading-relaxed text-justify">
+            Las Novelas ejemplares presentan una fabulosa diversidad de temas y estilos. Aunque hay novelas de corte idealista y sentimental, las más famosas y recordadas son aquellas con un fuerte corte realista, entre las cuales destacan:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mt-4">
+            <div class="search-text p-3 bg-parchment-50 rounded-lg border border-parchment-200 font-serif-body italic text-sm text-burgundy-900 font-bold">
+              El licenciado Vidriera
+            </div>
+            <div class="search-text p-3 bg-parchment-50 rounded-lg border border-parchment-200 font-serif-body italic text-sm text-burgundy-900 font-bold">
+              La gitanilla
+            </div>
+            <div class="search-text p-3 bg-parchment-50 rounded-lg border border-parchment-200 font-serif-body italic text-sm text-burgundy-900 font-bold">
+              El celoso extremeño
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Obras vinculadas con la Novela Picaresca -->
+      <div class="searchable-item space-y-6">
+        <h3 class="font-serif-title text-xl font-bold text-burgundy-900 flex items-center gap-2">
+          <i class="fa-solid fa-user-ninja text-amber-600"></i> Conexión con el Género Picaresco
+        </h3>
+        <p class="text-sm text-gray-600">Cervantes incluyó dos obras estrechamente ligadas con el mundo de los pícaros y la marginalidad de la época:</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- El coloquio de los perros -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 flex flex-col justify-between">
+            <div class="space-y-3">
+              <span class="px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">Fábula Realista</span>
+              <h4 class="font-bold text-lg text-burgundy-900 font-serif-body italic">El coloquio de los perros</h4>
+              <p class="search-text text-sm text-gray-700 text-justify leading-relaxed">
+                En esta singular obra, dos perros (Cipión y Berganza) adquieren de forma milagrosa durante una noche la capacidad de hablar. Aprovechan la ocasión para intercambiar sus memorias y andanzas con los diferentes amos a los que han servido, ofreciendo una feroz sátira social de la España barroca.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-parchment-100 text-xs text-gray-500 italic">
+              Visión satírica a través de la mirada canina.
+            </div>
+          </div>
+
+          <!-- Rinconete y Cortadillo -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-parchment-200 flex flex-col justify-between">
+            <div class="space-y-3">
+              <span class="px-2 py-1 bg-burgundy-100 text-burgundy-800 text-xs font-bold rounded-full">Novela de Hampa</span>
+              <h4 class="font-bold text-lg text-burgundy-900 font-serif-body italic">Rinconete y Cortadillo</h4>
+              <p class="search-text text-sm text-gray-700 text-justify leading-relaxed">
+                Narra las andanzas de dos muchachos que escapan de sus respectivos hogares y sobreviven como pícaros ladronzuelos en Sevilla. Su pericia y suerte los acaban poniendo en contacto con la célebre cofradía del hampa sevillana, una mafia pintoresca y organizada liderada por el carismático Monipodio.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-parchment-100 text-xs text-gray-500 italic">
+              Cervantes presta mucha atención a los diálogos y la pintura realista de ambientes.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Fragmento de Rinconete y Cortadillo -->
+      <div class="searchable-item bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-parchment-200">
+        <h4 class="font-serif-title text-base font-bold text-burgundy-900 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-users-viewfinder text-amber-600"></i> Escena del Hampa sevillana (Monipodio)
+        </h4>
+        <p class="text-xs text-gray-500 mb-4">A continuación se expone la conversación donde se describe la cofradía criminal del Monipodio y sus rígidos pero absurdos estatutos:</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-parchment-50 p-4 rounded-xl border border-parchment-200">
+          <!-- Diálogo 1 -->
+          <div class="space-y-3">
+            <div class="bg-white p-3 rounded-lg border border-parchment-200/60 shadow-sm">
+              <span class="text-xs font-bold text-amber-700">Narrador</span>
+              <p class="search-text text-xs italic text-gray-600">
+                Olvidábaseme de decir que, así como Monipodio bajó, al punto, todos los que aguardándolo estaban le hicieron una profunda y larga reverencia, excepto los dos bravos, que, a medio magate, como entre ellos se dice, le quitaron los capelos, y luego volvieron a su paseo por una parte del patio, y por la otra se paseaba Monipodio, el cual preguntó a los nuevos el ejercicio, la patria y padres.
+              </p>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-parchment-200/60 shadow-sm">
+              <span class="text-xs font-bold text-burgundy-800">Rincón</span>
+              <p class="search-text text-xs text-gray-700">
+                - El ejercicio ya está dicho, pues venimos ante vuesa merced; la patria no me parece de mucha importancia decilla, ni los padres tampoco, pues no se ha de hacer información para recibir algún hábito honroso.
+              </p>
+            </div>
+          </div>
+
+          <!-- Diálogo 2 -->
+          <div class="space-y-3">
+            <div class="bg-white p-3 rounded-lg border border-parchment-200/60 shadow-sm">
+              <span class="text-xs font-bold text-burgundy-800">Monipodio</span>
+              <p class="search-text text-xs text-gray-700">
+                - Vos, hijo mío, estáis en lo cierto, y es cosa muy acertada encubrir eso que decís; porque si la suerte no corriere como debe, no es bien que quede asentado debajo de signo de escribano, ni en el libro de las entradas: «Fulano, hijo de Fulano, vecino de tal parte, tal día le ahorcaron, o le azotaron», o otra cosa semejante, que, por lo menos, suena mal a los buenos oídos; y así, es provechoso documento callar la patria, encubrir los padres y mudar los propios nombres; aunque para entre nosotros no ha de haber nada encubierto, y solo ahora quiero saber los nombres de los dos.
+              </p>
+            </div>
+            <div class="flex justify-end">
+              <button onclick="readText(this)" class="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-amber-200 shadow-sm">
+                <i class="fa-solid fa-volume-high"></i> Escuchar Discurso de Monipodio
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center gap-3 text-xs text-gray-500 italic">
+          <i class="fa-solid fa-circle-info text-amber-500"></i>
+          <span>En la imagen que ilustraba este texto se puede apreciar la pintura histórica Rinconete y Cortadillo (1881) de Arturo Montero y Calvo, donde se escenifica magistralmente el ambiente marginal de Sevilla.</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 5: MULTIMEDIA (YOUTUBE INTEGRADO EN VIVO) ================= -->
+    <section id="tab-multimedia" class="tab-content hidden space-y-6">
+      
+      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-parchment-200">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-parchment-200 pb-4 mb-6">
+          <div>
+            <h2 class="font-serif-title text-2xl font-bold text-burgundy-900 flex items-center gap-2">
+              <i class="fa-brands fa-youtube text-red-600"></i> Aula de Vídeos de YouTube en Directo
+            </h2>
+            <p class="text-sm text-gray-600">Explora y reproduce recursos en tiempo real utilizando la API oficial de YouTube.</p>
+          </div>
+          <!-- Buscador directo de vídeos de YouTube -->
+          <div class="flex items-center gap-2 max-w-sm w-full">
+            <input type="text" id="ytSearchInput" placeholder="Buscar en YouTube..." class="flex-grow p-2 text-xs border border-parchment-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-600 bg-parchment-50" onkeydown="handleYtSearchKey(event)">
+            <button onclick="searchYoutubeVideos()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Categorías Rápidas de Búsqueda -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="text-xs font-semibold text-gray-500 self-center mr-2">Temas Rápidos:</span>
+          <button onclick="quickYtSearch('Don Quijote de la Mancha resumen')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200 px-3 py-1 rounded-full text-xs transition-colors">Don Quijote Resumen</button>
+          <button onclick="quickYtSearch('Novelas Ejemplares Cervantes')" class="bg-burgundy-50 hover:bg-burgundy-100 text-burgundy-950 border border-burgundy-200 px-3 py-1 rounded-full text-xs transition-colors">Novelas Ejemplares</button>
+          <button onclick="quickYtSearch('Rinconete y Cortadillo animado')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200 px-3 py-1 rounded-full text-xs transition-colors">Rinconete y Cortadillo</button>
+          <button onclick="quickYtSearch('Miguel de Cervantes biografia')" class="bg-burgundy-50 hover:bg-burgundy-100 text-burgundy-950 border border-burgundy-200 px-3 py-1 rounded-full text-xs transition-colors">Biografía Cervantes</button>
+        </div>
+
+        <!-- REPRODUCTOR DE VÍDEO PRINCIPAL -->
+        <div id="ytActivePlayerContainer" class="hidden mb-8 bg-black rounded-2xl overflow-hidden shadow-2xl border-4 border-burgundy-900 relative">
+          <div class="relative pb-[56.25%]">
+            <iframe id="ytIframePlayer" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="p-4 bg-burgundy-950 text-white flex items-center justify-between">
+            <h3 id="ytActiveVideoTitle" class="font-bold text-sm md:text-base truncate max-w-[80%]">Título del vídeo</h3>
+            <button onclick="closeYtPlayer()" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold transition-colors">
+              <i class="fa-solid fa-power-off mr-1"></i> Cerrar Player
+            </button>
+          </div>
+        </div>
+
+        <!-- GRID DE RESULTADOS DE LA API DE YOUTUBE -->
+        <div id="ytLoadingIndicator" class="hidden text-center py-12">
+          <i class="fa-solid fa-spinner animate-spin text-4xl text-red-600 mb-2"></i>
+          <p class="text-sm text-gray-500 italic">Consultando biblioteca interactiva de YouTube...</p>
+        </div>
+
+        <div id="ytNoResults" class="hidden text-center py-12 bg-parchment-50 rounded-xl border border-dashed border-parchment-200">
+          <i class="fa-solid fa-video-slash text-4xl text-gray-300 mb-2"></i>
+          <p class="text-sm text-gray-500 font-semibold">No hemos encontrado vídeos coincidentes o se ha superado la cuota de la API.</p>
+        </div>
+
+        <div id="ytVideoGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Los elementos se renderizan dinámicamente -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 6: EXAMEN GENERADO DINÁMICAMENTE POR IA (10 PREGUNTAS) ================= -->
+    <section id="tab-trivia" class="tab-content hidden space-y-6">
+      
+      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-amber-200 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full blur-3xl opacity-10 pointer-events-none"></div>
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-parchment-200 pb-4 mb-6">
+          <div>
+            <h2 class="font-serif-title text-2xl font-bold text-burgundy-900 flex items-center gap-2">
+              <i class="fa-solid fa-brain text-amber-600"></i> Autoevaluación Generada por IA
+            </h2>
+            <p class="text-xs text-gray-600 mt-1">Cada examen es redactado en tiempo real por el motor Gemini utilizando un esquema estructurado basado estrictamente en el libro.</p>
+          </div>
+          <!-- Botón de regeneración con IA -->
+          <button onclick="generateNewAiExam()" id="btnRegenExam" class="flex-shrink-0 bg-burgundy-800 hover:bg-burgundy-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-solid fa-rotate-right" id="regenIcon"></i> Generar Nuevo Examen con IA
+          </button>
+        </div>
+
+        <!-- Pantalla de Carga de IA -->
+        <div id="aiQuizLoading" class="flex flex-col items-center justify-center py-16 space-y-4">
+          <div class="relative w-16 h-16">
+            <div class="absolute inset-0 rounded-full border-4 border-parchment-200 border-t-burgundy-800 animate-spin"></div>
+            <div class="absolute inset-2 rounded-full border-4 border-parchment-200 border-b-amber-500 animate-spin" style="animation-direction: reverse; animation-duration: 1s;"></div>
+          </div>
+          <div class="text-center space-y-1">
+            <p class="font-serif-body italic text-burgundy-900 font-bold">"Escribiendo preguntas con tinta inteligente..."</p>
+            <p class="text-[10px] text-gray-500">Invocando a Gemini para diseñar un examen interactivo de 10 preguntas únicas.</p>
+          </div>
+        </div>
+
+        <!-- Pantalla de Error de IA -->
+        <div id="aiQuizError" class="hidden text-center py-12 bg-red-50 rounded-xl border border-red-200 text-red-900 max-w-lg mx-auto p-6 space-y-4">
+          <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600"></i>
+          <h3 class="font-bold text-base">Error en el tintero virtual</h3>
+          <p class="text-xs text-gray-700 leading-relaxed">Ha sido imposible estructurar un examen dinámico en este instante. Por favor, asegúrate de tener conexión y vuelve a pulsar el botón de regeneración.</p>
+          <button onclick="generateNewAiExam()" class="bg-red-700 hover:bg-red-800 text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors">Volver a intentar</button>
+        </div>
+
+        <!-- Contenedor Principal del Wizard del Quiz de IA -->
+        <div id="aiQuizWizard" class="hidden space-y-6">
+          
+          <!-- Barra de Progreso -->
+          <div class="bg-parchment-50 p-4 rounded-xl border border-parchment-200">
+            <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+              <span class="text-burgundy-900" id="wizardProgressLabel">Pregunta 1 de 10</span>
+              <span class="text-amber-700" id="wizardScoreLabel">Puntos: 0</span>
+            </div>
+            <div class="w-full bg-parchment-200 rounded-full h-2">
+              <div id="wizardProgressBar" class="bg-burgundy-800 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+            </div>
+          </div>
+
+          <!-- Contenedor de la Pregunta Activa -->
+          <div id="activeQuestionCard" class="bg-parchment-50 p-6 rounded-xl border border-parchment-200 space-y-4 min-h-[220px] transition-all duration-200">
+            <!-- La pregunta se inserta dinámicamente -->
+          </div>
+
+          <!-- Navegación del Wizard -->
+          <div class="flex items-center justify-between gap-4">
+            <button id="btnPrevQuestion" onclick="navigateQuestion(-1)" class="px-4 py-2 bg-parchment-200 hover:bg-parchment-300 text-parchment-900 text-xs font-bold rounded-lg transition-colors disabled:opacity-50" disabled>
+              <i class="fa-solid fa-arrow-left mr-1"></i> Anterior
+            </button>
+            <button id="btnNextQuestion" onclick="navigateQuestion(1)" class="px-5 py-2.5 bg-burgundy-800 hover:bg-burgundy-900 text-white text-xs font-bold rounded-lg transition-colors">
+              Siguiente <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenedor de Resultado Final del Examen de IA -->
+        <div id="aiQuizFinalCard" class="hidden bg-gradient-to-br from-parchment-50 to-amber-50/30 p-8 rounded-xl border border-amber-200 text-center space-y-6 max-w-xl mx-auto">
+          <div class="inline-flex w-16 h-16 rounded-full bg-amber-500 text-burgundy-950 items-center justify-center text-3xl font-bold shadow-md animate-bounce" id="finalResultIcon">
+            🏆
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-serif-title text-2xl font-bold text-burgundy-900">Examen Concluido</h3>
+            <p class="text-sm text-gray-600 font-semibold" id="finalScoreText">Has acertado 8 de 10 preguntas (80%).</p>
+            <p class="text-xs text-gray-500 leading-relaxed max-w-md mx-auto" id="finalVerdictText">¡Excelente dominio del temario! Conoces muy bien las técnicas del Quijote y las Novelas Ejemplares.</p>
+          </div>
+          <div class="flex items-center justify-center gap-4">
+            <button onclick="resetWizardQuiz()" class="px-5 py-2.5 bg-parchment-200 hover:bg-parchment-300 text-parchment-900 text-xs font-bold rounded-lg transition-colors">
+              Volver a Intentar
+            </button>
+            <button onclick="generateNewAiExam()" class="px-5 py-2.5 bg-burgundy-800 hover:bg-burgundy-900 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-rotate"></i> Generar Otro Test Diferente
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= CHAT INTELIGENTE CON LA IA (CERVANTES-BOT) ================= -->
+  <!-- Botón flotante para abrir el Chat de IA -->
+  <button id="openAiChatBtn" onclick="toggleAiChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-burgundy-800 hover:bg-burgundy-900 text-white rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 z-40">
+    <i class="fa-solid fa-brain text-xl"></i>
+    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+    </span>
+  </button>
+
+  <!-- Ventana de Chat Flotante -->
+  <div id="aiChatWindow" class="fixed bottom-24 right-6 w-[90vw] md:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-parchment-200 flex flex-col overflow-hidden transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none z-50">
+    <!-- Cabecera del Chat -->
+    <div class="bg-gradient-to-r from-burgundy-900 to-burgundy-800 p-4 text-white flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center text-burgundy-900 font-bold">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+        <div>
+          <h3 class="font-serif-title text-sm font-bold tracking-wide">Tutor de IA Cervantes</h3>
+          <p class="text-[10px] text-amber-200">Gemini 2.5 • Pregúntame dudas</p>
+        </div>
+      </div>
+      <button onclick="toggleAiChat()" class="text-white hover:text-amber-300">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Área de Mensajes -->
+    <div id="aiChatMessages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-parchment-50 text-xs">
+      <!-- Mensaje Inicial de la IA -->
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center text-burgundy-900 font-bold flex-shrink-0">
+          C
+        </div>
+        <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-parchment-200/80 shadow-sm max-w-[80%]">
+          <p class="text-gray-800 leading-relaxed">
+            ¡Paz sea contigo, noble estudiante! Soy tu tutor de Inteligencia Artificial experto en el Siglo de Oro. Puedes preguntarme cualquier duda sobre el <strong>Quijote</strong>, las <strong>técnicas narrativas</strong>, las <strong>Novelas Idealistas</strong> o las <strong>Ejemplares</strong>. ¿En qué os puedo servir?
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Entrada de Mensaje -->
+    <div class="p-3 bg-white border-t border-parchment-200 flex items-center gap-2">
+      <input type="text" id="aiChatInput" onkeydown="handleAiChatKey(event)" placeholder="Escribe tu consulta literaria..." class="flex-grow p-2.5 border border-parchment-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-burgundy-800 text-xs">
+      <button onclick="sendAiChatMessage()" class="w-9 h-9 bg-burgundy-800 hover:bg-burgundy-900 text-white rounded-xl flex items-center justify-center transition-colors">
+        <i class="fa-solid fa-paper-plane text-xs"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pie de Página -->
+  <footer class="bg-burgundy-900 text-white/80 py-8 border-t border-amber-600/50 text-xs">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-serif-title text-sm text-white font-bold tracking-wide">Miguel de Cervantes Saavedra</p>
+        <p class="mt-1 text-white/60">Plataforma Educativa Inteligente de Literatura Española (Páginas 268-271)</p>
+      </div>
+      <div class="flex items-center gap-4 text-base">
+        <span class="text-white/40">|</span>
+        <i class="fa-solid fa-feather-pointed text-amber-500"></i>
+        <i class="fa-solid fa-book text-amber-500"></i>
+        <i class="fa-solid fa-brain text-amber-500"></i>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Elemento para control de texto a voz (SpeechSynthesis) -->
+  <div id="voiceIndicator" class="fixed bottom-4 right-4 bg-amber-600 text-white px-4 py-2.5 rounded-full shadow-lg text-xs font-semibold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all z-50">
+    <span class="animate-pulse">🔊</span>
+    <span>Leyendo fragmento en voz alta...</span>
+    <button onclick="stopVoice()" class="ml-2 font-bold underline text-amber-100 hover:text-white">Detener</button>
+  </div>
+
+  <!-- Script con toda la lógica interactiva -->
+  <script>
+    // Variables de control de voz, API de YouTube y Gemini
+    let currentUtterance = null;
+    const apiKey = ""; // Se gestiona mediante inyección automática del entorno
+    const youtubeApiKey = "AIzaSyB_sn9VNR2ggE3AES83MlMxbLj7ZpZWoLQ"; // API Key de YouTube
+
+    // Variables de Estado para el Cuestionario Dinámico de IA
+    let aiQuestions = [];
+    let activeQuestionIndex = 0;
+    let selectedAnswers = {}; // Mapea { questionIndex: optionIndex }
+    let hasCheckedAnswer = {}; // Mapea { questionIndex: boolean }
+
+    // Cambiar de Pestaña activa
+    function switchTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('border-burgundy-700', 'text-burgundy-800', 'font-bold');
+        btn.classList.add('border-transparent', 'text-gray-500');
+      });
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const activeButton = document.getElementById(`btn-${tabId}`);
+      if (activeButton) {
+        activeButton.classList.remove('border-transparent', 'text-gray-500');
+        activeButton.classList.add('border-burgundy-700', 'text-burgundy-800', 'font-bold');
+      }
+      
+      stopVoice();
+
+      // Cargar automáticamente vídeos sugeridos al abrir la pestaña multimedia por primera vez
+      if (tabId === 'tab-multimedia') {
+        const grid = document.getElementById('ytVideoGrid');
+        if (grid.children.length === 0) {
+          quickYtSearch('Don Quijote de la Mancha resumen');
+        }
+      }
+    }
+
+    // Buscador Avanzado con resaltado dinámico de texto original
+    let originalTexts = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const textElements = document.querySelectorAll('.search-text');
+      textElements.forEach((el, index) => {
+        originalTexts.push({
+          element: el,
+          html: el.innerHTML
+        });
+      });
+
+      // Al arrancar, iniciar la llamada inteligente para traer el examen dinámico con IA
+      generateNewAiExam();
+    });
+
+    function searchContent() {
+      const searchInput = document.getElementById('searchInput');
+      const filter = searchInput.value.toLowerCase().trim();
+      const items = document.querySelectorAll('.searchable-item');
+      const notification = document.getElementById('searchNotification');
+      const clearBtn = document.getElementById('clearSearch');
+      const matchCountSpan = document.getElementById('matchCount');
+
+      if (filter === '') {
+        clearSearchInput();
+        return;
+      }
+
+      clearBtn.classList.remove('hidden');
+      notification.classList.remove('hidden');
+
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('hidden'));
+
+      let matches = 0;
+
+      originalTexts.forEach(item => {
+        item.element.innerHTML = item.html;
+      });
+
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          item.classList.remove('hidden');
+          item.classList.add('ring-2', 'ring-amber-500/40');
+          matches++;
+
+          const textNodes = item.querySelectorAll('.search-text');
+          textNodes.forEach(node => {
+            const innerHTML = node.innerHTML;
+            const escapedFilter = filter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp(`(${escapedFilter})`, 'gi');
+            node.innerHTML = innerHTML.replace(regex, '<mark>$1</mark>');
+          });
+
+        } else {
+          item.classList.add('hidden');
+          item.classList.remove('ring-2', 'ring-amber-500/40');
+        }
+      });
+
+      matchCountSpan.textContent = matches;
+    }
+
+    function clearSearchInput() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.value = '';
+      
+      document.getElementById('clearSearch').classList.add('hidden');
+      document.getElementById('searchNotification').classList.add('hidden');
+
+      originalTexts.forEach(item => {
+        item.element.innerHTML = item.html;
+      });
+
+      const items = document.querySelectorAll('.searchable-item');
+      items.forEach(item => {
+        item.classList.remove('hidden');
+        item.classList.remove('ring-2', 'ring-amber-500/40');
+      });
+
+      switchTab('tab-quijote');
+    }
+
+    // Texto a Voz para fragmentos literarios
+    function readText(buttonElement) {
+      stopVoice();
+
+      const parent = buttonElement.parentElement.parentElement;
+      const quoteElement = parent.querySelector('blockquote') || parent.querySelector('p.italic') || parent.querySelector('pre');
+      
+      if (!quoteElement) return;
+
+      const textToRead = quoteElement.textContent;
+      
+      if ('speechSynthesis' in window) {
+        currentUtterance = new SpeechSynthesisUtterance(textToRead);
+        currentUtterance.lang = 'es-ES';
+        
+        const indicator = document.getElementById('voiceIndicator');
+        indicator.classList.remove('translate-y-20', 'opacity-0');
+        indicator.classList.add('translate-y-0', 'opacity-100');
+
+        currentUtterance.onend = function() {
+          hideVoiceIndicator();
+        };
+
+        currentUtterance.onerror = function() {
+          hideVoiceIndicator();
+        };
+
+        window.speechSynthesis.speak(currentUtterance);
+      } else {
+        alert("Tu navegador no soporta lectura de voz.");
+      }
+    }
+
+    function stopVoice() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      hideVoiceIndicator();
+    }
+
+    function hideVoiceIndicator() {
+      const indicator = document.getElementById('voiceIndicator');
+      indicator.classList.add('translate-y-20', 'opacity-0');
+      indicator.classList.remove('translate-y-0', 'opacity-100');
+    }
+
+    // ================= LÓGICA DE LA API DE YOUTUBE V3 =================
+
+    function handleYtSearchKey(event) {
+      if (event.key === 'Enter') {
+        searchYoutubeVideos();
+      }
+    }
+
+    function quickYtSearch(query) {
+      document.getElementById('ytSearchInput').value = query;
+      searchYoutubeVideos(query);
+    }
+
+    async function searchYoutubeVideos(forcedQuery = "") {
+      const queryInput = document.getElementById('ytSearchInput');
+      const query = forcedQuery || queryInput.value.trim();
+
+      if (!query) return;
+
+      const grid = document.getElementById('ytVideoGrid');
+      const loader = document.getElementById('ytLoadingIndicator');
+      const noResults = document.getElementById('ytNoResults');
+
+      grid.innerHTML = '';
+      noResults.classList.add('hidden');
+      loader.classList.remove('hidden');
+
+      try {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${youtubeApiKey}&type=video&maxResults=6`);
+        
+        if (!response.ok) {
+          throw new Error('La llamada a la API de YouTube ha fallado.');
+        }
+
+        const data = await response.json();
+        loader.classList.add('hidden');
+
+        if (!data.items || data.items.length === 0) {
+          noResults.classList.remove('hidden');
+          return;
+        }
+
+        data.items.forEach(item => {
+          const videoId = item.id.videoId;
+          const title = item.snippet.title;
+          const thumbnail = item.snippet.thumbnails.medium.url;
+          const channelTitle = item.snippet.channelTitle;
+          const description = item.snippet.description;
+
+          const card = document.createElement('div');
+          card.className = "bg-parchment-50 rounded-xl overflow-hidden border border-parchment-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow cursor-pointer";
+          card.onclick = () => playYoutubeVideo(videoId, title);
+
+          card.innerHTML = `
+            <div class="relative bg-black group overflow-hidden">
+              <img src="${thumbnail}" alt="${title}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-lg"><i class="fa-solid fa-play"></i></span>
+              </div>
+            </div>
+            <div class="p-4 space-y-2 flex-grow flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase truncate block max-w-max">${channelTitle}</span>
+                <h3 class="font-bold text-xs text-burgundy-900 mt-2 line-clamp-2">${title}</h3>
+              </div>
+              <p class="text-[11px] text-gray-500 line-clamp-2">${description}</p>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        loader.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        console.error("Error fetching YouTube API:", error);
+      }
+    }
+
+    function playYoutubeVideo(videoId, title) {
+      const container = document.getElementById('ytActivePlayerContainer');
+      const player = document.getElementById('ytIframePlayer');
+      const titleSpan = document.getElementById('ytActiveVideoTitle');
+
+      player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      titleSpan.textContent = title;
+      container.classList.remove('hidden');
+      
+      container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closeYtPlayer() {
+      const container = document.getElementById('ytActivePlayerContainer');
+      const player = document.getElementById('ytIframePlayer');
+      player.src = "";
+      container.classList.add('hidden');
+    }
+
+    // ================= GENERACIÓN DINÁMICA DE CUESTIONARIOS POR IA (GEMINI) =================
+
+    async function generateNewAiExam() {
+      const loader = document.getElementById('aiQuizLoading');
+      const errorDiv = document.getElementById('aiQuizError');
+      const wizard = document.getElementById('aiQuizWizard');
+      const finalCard = document.getElementById('aiQuizFinalCard');
+      const btnRegen = document.getElementById('btnRegenExam');
+      const regenIcon = document.getElementById('regenIcon');
+
+      // Restablecer interfaz
+      loader.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+      wizard.classList.add('hidden');
+      finalCard.classList.add('hidden');
+      btnRegen.disabled = true;
+      regenIcon.classList.add('animate-spin');
+
+      // Definir la carga teórica exacta que Gemini debe consultar para estructurar el JSON de examen
+      const promptQuery = `
+        Diseña un cuestionario de opción múltiple con exactamente 10 preguntas aleatorias, variadas e instructivas sobre los siguientes contenidos de estudio de las páginas 268 a 271:
+        
+        1. "Técnicas narrativas de Don Quijote": Polifonía narrativa (narrador Cide Hamete Benengeli, manuscrito arábigo, Alcaná de Toledo), Digresiones (relatos intercalados como El curioso impertinente y la Historia de Cardenio), y Metaficción (personajes conscientes de que existe la primera parte de sus vidas en libro). Estilo natural y claro.
+        2. "Interpretación de la obra": Intención de parodiar novelas de caballerías y temas universales (ficción vs realidad, búsqueda de la libertad, imaginación, límites entre locura y cordura, amistad, frustración de deseos).
+        3. "Estructura del Quijote": Génesis de la obra, argumento de la Primera Parte (1605, Rocinante, Dulcinea/Aldonza, molinos) y Segunda Parte (1615, el Caballero de la Blanca Luna, Barcelona, regreso y muerte).
+        4. "Personajes": Don Quijote como loco cuerdo; Sancho Panza como campesino pragmático; proceso de quijotización de Sancho y sanchificación de Quijote.
+        5. "Novelas Idealistas": La Galatea (género pastoril, amor no correspondido, ninfa Galatea) y Los trabajos de Persiles y Sigismunda (género bizantino, peregrinación a Roma, dedicatoria de despedida a la muerte).
+        6. "Novelas Ejemplares" (1613): Significado del término ejemplar (didáctico y novedoso). Clasificación: Novelas realistas (La gitanilla, El licenciado Vidriera, El celoso extremeño). Novelas picarescas (El coloquio de los perros con Cipión y Berganza; Rinconete y Cortadillo con la cofradía de hampa de Monipodio en Sevilla).
+
+        Debes responder obligatoriamente con el formato JSON y el esquema estructurado que te indico.
+        Genera preguntas con 3 opciones cada una y un único índice de respuesta correcto (0, 1 o 2). El campo "explanation" debe contener una breve explicación didáctica que demuestre de qué página o concepto surge.
+      `;
+
+      try {
+        const responseSchema = {
+          type: "OBJECT",
+          properties: {
+            questions: {
+              type: "ARRAY",
+              description: "Array de preguntas de literatura",
+              items: {
+                type: "OBJECT",
+                properties: {
+                  question: { type: "STRING" },
+                  options: { 
+                    type: "ARRAY", 
+                    items: { type: "STRING" }
+                  },
+                  answerIndex: { type: "INTEGER" },
+                  explanation: { type: "STRING" }
+                },
+                required: ["question", "options", "answerIndex", "explanation"]
+              }
+            }
+          },
+          required: ["questions"]
+        };
+
+        const resultText = await fetchStructuredGemini(promptQuery, responseSchema);
+        const parsedData = JSON.parse(resultText);
+
+        if (parsedData && parsedData.questions && parsedData.questions.length === 10) {
+          aiQuestions = parsedData.questions;
+          activeQuestionIndex = 0;
+          selectedAnswers = {};
+          hasCheckedAnswer = {};
+          
+          loader.classList.add('hidden');
+          wizard.classList.remove('hidden');
+          renderActiveQuestion();
+        } else {
+          throw new Error("Formato de preguntas inválido.");
+        }
+
+      } catch (error) {
+        console.error("Error generating exam with IA:", error);
+        loader.classList.add('hidden');
+        errorDiv.classList.remove('hidden');
+      } finally {
+        btnRegen.disabled = false;
+        regenIcon.classList.remove('animate-spin');
+      }
+    }
+
+    // Llamada de bajo nivel a Gemini estructurada con backoff exponencial
+    async function fetchStructuredGemini(prompt, schema, retries = 5, delay = 1000) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: schema
+        }
+      };
+
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          
+          if (replyText) {
+            return replyText;
+          } else {
+            throw new Error("No data returned");
+          }
+        } catch (error) {
+          if (i === retries - 1) throw error;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // Pintar la pregunta activa en pantalla
+    function renderActiveQuestion() {
+      const card = document.getElementById('activeQuestionCard');
+      const progressLabel = document.getElementById('wizardProgressLabel');
+      const progressBar = document.getElementById('wizardProgressBar');
+      const scoreLabel = document.getElementById('wizardScoreLabel');
+      const btnPrev = document.getElementById('btnPrevQuestion');
+      const btnNext = document.getElementById('btnNextQuestion');
+
+      if (!aiQuestions || aiQuestions.length === 0) return;
+
+      const q = aiQuestions[activeQuestionIndex];
+      const isAnswered = selectedAnswers[activeQuestionIndex] !== undefined;
+      const isChecked = hasCheckedAnswer[activeQuestionIndex] === true;
+
+      // Actualizar progreso
+      progressLabel.textContent = `Pregunta ${activeQuestionIndex + 1} de 10`;
+      progressBar.style.width = `${(activeQuestionIndex + 1) * 10}%`;
+      
+      // Calcular puntuación parcial en tiempo real
+      let currentScore = 0;
+      Object.keys(selectedAnswers).forEach(key => {
+        if (selectedAnswers[key] === aiQuestions[key].answerIndex) {
+          currentScore++;
+        }
+      });
+      scoreLabel.textContent = `Puntos: ${currentScore}/10`;
+
+      // Habilitar / Deshabilitar botones de navegación
+      btnPrev.disabled = activeQuestionIndex === 0;
+      btnNext.textContent = activeQuestionIndex === 9 ? "Finalizar Examen" : "Siguiente Pregunta";
+
+      // Generar opciones de radio interactivo
+      let optionsHtml = '';
+      q.options.forEach((opt, idx) => {
+        let optionStyle = "border-gray-200 bg-white hover:bg-amber-50/50";
+        let checkIcon = "";
+
+        if (isAnswered) {
+          const selectedIdx = selectedAnswers[activeQuestionIndex];
+          if (idx === selectedIdx) {
+            optionStyle = "border-burgundy-700 bg-burgundy-50 text-burgundy-900 font-bold";
+          }
+          
+          // Si ya se ha confirmado/evaluado la respuesta
+          if (isChecked) {
+            if (idx === q.answerIndex) {
+              optionStyle = "border-emerald-600 bg-emerald-50 text-emerald-900 font-semibold";
+              checkIcon = '<i class="fa-solid fa-circle-check text-emerald-600 ml-auto"></i>';
+            } else if (idx === selectedIdx) {
+              optionStyle = "border-red-600 bg-red-50 text-red-900";
+              checkIcon = '<i class="fa-solid fa-circle-xmark text-red-600 ml-auto"></i>';
+            } else {
+              optionStyle = "border-gray-100 bg-gray-50/50 opacity-60";
+            }
+          }
+        }
+
+        optionsHtml += `
+          <label class="flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${optionStyle}" onclick="selectOption(${idx})">
+            <input type="radio" name="aiOpt" value="${idx}" class="accent-burgundy-700" ${isAnswered && selectedAnswers[activeQuestionIndex] === idx ? 'checked' : ''} ${isChecked ? 'disabled' : ''}>
+            <span class="text-xs leading-relaxed">${opt}</span>
+            ${checkIcon}
+          </label>
+        `;
+      });
+
+      // Caja de explicación literaria en caso de estar ya evaluada
+      let feedbackHtml = '';
+      if (isChecked) {
+        const isCorrect = selectedAnswers[activeQuestionIndex] === q.answerIndex;
+        feedbackHtml = `
+          <div class="p-4 rounded-xl border text-xs leading-relaxed ${isCorrect ? 'bg-emerald-50/50 border-emerald-200 text-emerald-950' : 'bg-red-50/50 border-red-200 text-red-950'} mt-4">
+            <span class="font-bold flex items-center gap-1.5 mb-1">
+              ${isCorrect ? '<i class="fa-solid fa-circle-check text-emerald-600"></i> ¡Respuesta Correcta!' : '<i class="fa-solid fa-circle-xmark text-red-600"></i> Respuesta Incorrecta'}
+            </span>
+            <p>${q.explanation}</p>
+          </div>
+        `;
+      } else if (isAnswered) {
+        feedbackHtml = `
+          <button onclick="checkQuestionAnswer()" class="w-full mt-4 bg-burgundy-800 hover:bg-burgundy-900 text-white font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check-double"></i> Confirmar Respuesta e Ir a la Explicación
+          </button>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="space-y-2">
+          <span class="px-2.5 py-1 bg-burgundy-100 text-burgundy-900 text-[10px] font-bold rounded-full uppercase tracking-wider">Concepto de Estudio</span>
+          <h3 class="font-bold text-sm md:text-base text-burgundy-950">${q.question}</h3>
+        </div>
+        <div class="grid grid-cols-1 gap-3 mt-4">
+          ${optionsHtml}
+        </div>
+        ${feedbackHtml}
+      `;
+    }
+
+    // Registrar selección de opción
+    function selectOption(idx) {
+      if (hasCheckedAnswer[activeQuestionIndex] === true) return;
+      selectedAnswers[activeQuestionIndex] = idx;
+      renderActiveQuestion();
+    }
+
+    // Confirmar respuesta para habilitar explicaciones
+    function checkQuestionAnswer() {
+      hasCheckedAnswer[activeQuestionIndex] = true;
+      renderActiveQuestion();
+    }
+
+    // Controlar el Wizard de preguntas
+    function navigateQuestion(direction) {
+      const total = 10;
+      
+      // Comprobar si se ha contestado
+      if (direction === 1 && selectedAnswers[activeQuestionIndex] === undefined) {
+        // Alerta personalizada no molesta en iFrame
+        const label = document.getElementById('wizardProgressLabel');
+        label.textContent = "⚠️ ¡Selecciona una opción antes de continuar!";
+        label.classList.add('text-red-600');
+        setTimeout(() => {
+          label.classList.remove('text-red-600');
+          label.textContent = `Pregunta ${activeQuestionIndex + 1} de 10`;
+        }, 2000);
+        return;
+      }
+
+      // Asegurar que confirma la respuesta antes de pasar
+      if (direction === 1 && !hasCheckedAnswer[activeQuestionIndex]) {
+        checkQuestionAnswer();
+        return;
+      }
+
+      activeQuestionIndex += direction;
+
+      if (activeQuestionIndex >= total) {
+        showFinalQuizResults();
+      } else {
+        renderActiveQuestion();
+      }
+    }
+
+    // Mostrar el fin del examen
+    function showFinalQuizResults() {
+      document.getElementById('aiQuizWizard').classList.add('hidden');
+      const finalCard = document.getElementById('aiQuizFinalCard');
+      finalCard.classList.remove('hidden');
+
+      let score = 0;
+      Object.keys(selectedAnswers).forEach(key => {
+        if (selectedAnswers[key] === aiQuestions[key].answerIndex) {
+          score++;
+        }
+      });
+
+      const scoreText = document.getElementById('finalScoreText');
+      const verdictText = document.getElementById('finalVerdictText');
+      const icon = document.getElementById('finalResultIcon');
+
+      scoreText.textContent = `Has acertado ${score} de 10 preguntas (${score * 10}%).`;
+
+      if (score === 10) {
+        icon.textContent = "🏆";
+        verdictText.textContent = "¡Perfecto! Un 10 absoluto. Has absorbido de manera impecable cada detalle de las 4 páginas de Cervantes.";
+      } else if (score >= 8) {
+        icon.textContent = "🌟";
+        verdictText.textContent = "¡Sobresaliente! Tienes un dominio magnífico sobre el Quijote, técnicas de estilo, novelas idealistas y ejemplares.";
+      } else if (score >= 5) {
+        icon.textContent = "👍";
+        verdictText.textContent = "Aprobado. Buen intento, pero te sugerimos revisar con el Tutor de IA tus errores para consolidar el temario.";
+      } else {
+        icon.textContent = "📚";
+        verdictText.textContent = "Necesitas repasar. Lee el material adjunto detenidamente o asiste al aula virtual de YouTube.";
+      }
+    }
+
+    function resetWizardQuiz() {
+      activeQuestionIndex = 0;
+      selectedAnswers = {};
+      hasCheckedAnswer = {};
+      document.getElementById('aiQuizFinalCard').classList.add('hidden');
+      document.getElementById('aiQuizWizard').classList.remove('hidden');
+      renderActiveQuestion();
+    }
+
+    // ================= SECCIÓN LÓGICA DE LA IA DE CHAT (GEMINI API) =================
+
+    function toggleAiChat() {
+      const chatWindow = document.getElementById('aiChatWindow');
+      if (chatWindow.classList.contains('opacity-0')) {
+        chatWindow.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+        chatWindow.classList.add('opacity-100', 'translate-y-0');
+        document.getElementById('aiChatInput').focus();
+      } else {
+        chatWindow.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+        chatWindow.classList.remove('opacity-100', 'translate-y-0');
+      }
+    }
+
+    function handleAiChatKey(event) {
+      if (event.key === 'Enter') {
+        sendAiChatMessage();
+      }
+    }
+
+    async function sendAiChatMessage() {
+      const chatInput = document.getElementById('aiChatInput');
+      const userText = chatInput.value.trim();
+
+      if (!userText) return;
+
+      chatInput.value = '';
+      appendChatMessage(userText, 'user');
+      const thinkingId = appendChatMessage("Pensando respuesta...", 'thinking');
+
+      try {
+        const replyText = await fetchGeminiResponse(userText);
+        removeThinkingMessage(thinkingId);
+        appendChatMessage(replyText, 'ai');
+      } catch (error) {
+        removeThinkingMessage(thinkingId);
+        appendChatMessage("Lo siento, hermano de letras, los vientos del destino son esquivos y he tenido un error al conectar con mi tintero virtual. Por favor, vuelve a intentarlo.", 'ai');
+      }
+    }
+
+    function appendChatMessage(text, role) {
+      const messagesContainer = document.getElementById('aiChatMessages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = "flex items-start gap-2.5";
+
+      const uniqueId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 5);
+      msgDiv.setAttribute('id', uniqueId);
+
+      if (role === 'user') {
+        msgDiv.className += " justify-end";
+        msgDiv.innerHTML = `
+          <div class="bg-burgundy-800 text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[85%]">
+            <p class="leading-relaxed">${escapeHtml(text)}</p>
+          </div>
+        `;
+      } else if (role === 'ai') {
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center text-burgundy-900 font-bold flex-shrink-0">
+            C
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-parchment-200/80 shadow-sm max-w-[85%] text-gray-800">
+            <p class="leading-relaxed">${text.replace(/\n/g, '<br>')}</p>
+          </div>
+        `;
+      } else if (role === 'thinking') {
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-amber-500/50 flex items-center justify-center text-burgundy-900/60 font-bold flex-shrink-0 animate-pulse">
+            C
+          </div>
+          <div class="bg-white/60 p-3 rounded-2xl rounded-tl-none border border-parchment-200/50 shadow-sm max-w-[85%] text-gray-400 italic">
+            <p class="leading-relaxed flex items-center gap-1.5">
+              <i class="fa-solid fa-spinner animate-spin"></i> Escribiendo respuestas con pluma...
+            </p>
+          </div>
+        `;
+      }
+
+      messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return uniqueId;
+    }
+
+    function removeThinkingMessage(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    async function fetchGeminiResponse(query, retries = 5, delay = 1000) {
+      const systemInstruction = `
+        Eres Miguel de Cervantes Saavedra, el gran hito literario del Siglo de Oro. Te encuentras integrado como tutor inteligente en esta plataforma interactiva que estudia el temario de literatura de las páginas 268 a 271.
+        Debes responder de manera amigable, culta, con un ligero toque de cortesía del castellano antiguo del siglo XVII pero perfectamente claro y didáctico para los estudiantes del instituto moderno.
+        Tu conocimiento se enfoca de forma prioritaria en:
+        1. Don Quijote de la Mancha (Génesis, parodia de novelas de caballerías, Argumentos de la Parte I y II, la tercera salida, el Caballero de la Blanca Luna, los personajes Don Quijote y Sancho Panza, la quijotización y sanchificación).
+        2. Técnicas narrativas (Polifonía narrativa, digresiones, metaficción) y el estilo natural y claro del Quijote.
+        3. Novelas idealistas (La Galatea y Los trabajos de Persiles y Sigismunda, y su prólogo poético).
+        4. Novelas ejemplares (Novelas de corte realista/idealista, significado de ejemplares, obras picarescas como Rinconete y Cortadillo con Monipodio, y El coloquio de los perros con Cipión y Berganza).
+        Intenta dar respuestas concisas y bien estructuradas para que quepan bien en la pequeña ventana de chat de la web.
+      `;
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+      const payload = {
+        contents: [
+          {
+            parts: [
+              { text: query }
+            ]
+          }
+        ],
+        systemInstruction: {
+          parts: [
+            { text: systemInstruction }
+          ]
+        }
+      };
+
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          
+          if (replyText) {
+            return replyText;
+          } else {
+            throw new Error("No text returned from Gemini");
+          }
+        } catch (error) {
+          if (i === retries - 1) throw error;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+
+```
